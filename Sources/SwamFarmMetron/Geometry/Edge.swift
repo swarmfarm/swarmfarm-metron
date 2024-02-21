@@ -4,7 +4,7 @@ import CoreGraphics
  *  An edge is an outside limit of an area.
  *  The point where two edges meet is a corner.
  */
-public protocol EdgeType {
+protocol EdgeType {
     associatedtype CornerType
 
     var corners: (CornerType, CornerType) { get }

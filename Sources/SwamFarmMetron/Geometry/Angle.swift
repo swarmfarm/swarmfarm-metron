@@ -4,33 +4,33 @@ import CoreGraphics
  *  An `Angle` in two-dimensional space, either expressed
  *  in radians or degrees.
  */
-public struct Angle {
+struct Angle {
 
     public enum Unit {
         case radians, degrees
     }
 
     /// Expresses the angle value in the current unit.
-    public var value: CGFloat
+    var value: CGFloat
 
     /// The current unit in which the angle is expressed.
-    public var unit: Unit
+    var unit: Unit
 
     /// Initializes a new `Angle`. Unit is radians by default.
-    public init(_ value: CGFloat, unit: Unit = .radians) {
+    init(_ value: CGFloat, unit: Unit = .radians) {
         self.value = value
         self.unit = unit
     }
 }
 
-public extension Angle {
+extension Angle {
 
     /// - returns: The angle expressed in radians.
-    public var radians: CGFloat {
+    var radians: CGFloat {
         return asUnit(.radians)
     }
     /// - returns: The angle expressed in degrees.
-    public var degrees: CGFloat {
+    var degrees: CGFloat {
         return asUnit(.degrees)
     }
 
@@ -39,7 +39,7 @@ public extension Angle {
     private static let degreesToRadiansFactor: CGFloat = .pi / 180.0
 
     /// - returns: The angle expressed in the provided unit.
-    public func asUnit(_ unit: Unit) -> CGFloat {
+    func asUnit(_ unit: Unit) -> CGFloat {
         if self.unit == unit {
             return value
         }
@@ -59,13 +59,13 @@ public extension Angle {
 
     /// - returns: The floating point value representing a full rotation
     /// expressed in the current unit of this angle.
-    public var fullRotation: CGFloat {
+    var fullRotation: CGFloat {
         return Angle.fullRotation(unit: unit)
     }
 
     /// - returns: The angle expressed in a value normalized between
     /// 0 and `fullRotation`.
-    public var normalized: Angle {
+    var normalized: Angle {
         let max = fullRotation
         let moduloValue = fmod(value, max)
         let normalizedValue = moduloValue >= 0.0 ? moduloValue : moduloValue + max
@@ -74,7 +74,7 @@ public extension Angle {
 
     /// - returns: `fullRotation` minus the `normalized` angle.
     ///
-    public var inversed: Angle {
+    var inversed: Angle {
         let max = fullRotation
         return Angle(max - normalized.value, unit: unit)
     }
@@ -90,7 +90,7 @@ extension Angle: Equatable {
 }
 
 /// True if angle and unit are the same.
-public func ===(lhs: Angle, rhs: Angle) -> Bool {
+func ===(lhs: Angle, rhs: Angle) -> Bool {
     return lhs.value == rhs.value &&
     lhs.unit == rhs.unit
 }
@@ -103,70 +103,70 @@ extension Angle: Comparable {
 
 // MARK: Arithmetic
 extension Angle: Summable {
-    static public func +(lhs: Angle, rhs: Angle) -> Angle {
+    static func +(lhs: Angle, rhs: Angle) -> Angle {
         return Angle(lhs.value + rhs.asUnit(lhs.unit), unit: lhs.unit)
     }
 }
 
-public func -(lhs: Angle, rhs: Angle) -> Angle {
+func -(lhs: Angle, rhs: Angle) -> Angle {
     return Angle(lhs.value - rhs.asUnit(lhs.unit), unit: lhs.unit)
 }
-public func *(lhs: Angle, rhs: Angle) -> Angle {
+func *(lhs: Angle, rhs: Angle) -> Angle {
     return Angle(lhs.value * rhs.asUnit(lhs.unit), unit: lhs.unit)
 }
-public func /(lhs: Angle, rhs: Angle) -> Angle {
+func /(lhs: Angle, rhs: Angle) -> Angle {
     return Angle(lhs.value / rhs.asUnit(lhs.unit), unit: lhs.unit)
 }
 
-public func *(lhs: Angle, rhs: CGFloat) -> Angle {
+func *(lhs: Angle, rhs: CGFloat) -> Angle {
     return Angle(lhs.value * rhs, unit: lhs.unit)
 }
-public func /(lhs: Angle, rhs: CGFloat) -> Angle {
+func /(lhs: Angle, rhs: CGFloat) -> Angle {
     return Angle(lhs.value / rhs, unit: lhs.unit)
 }
-public func *(lhs: CGFloat, rhs: Angle) -> Angle {
+func *(lhs: CGFloat, rhs: Angle) -> Angle {
     return Angle(rhs.value * lhs, unit: rhs.unit)
 }
 
 // MARK: Trigonometry
 
-public func sin(_ angle: Angle) -> CGFloat {
+func sin(_ angle: Angle) -> CGFloat {
     return sin(angle.asUnit(.radians))
 }
-public func cos(_ angle: Angle) -> CGFloat {
+func cos(_ angle: Angle) -> CGFloat {
     return cos(angle.asUnit(.radians))
 }
-public func tan(_ angle: Angle) -> CGFloat {
+func tan(_ angle: Angle) -> CGFloat {
     return tan(angle.asUnit(.radians))
 }
 
-public func asin(_ x: CGFloat) -> Angle {
+func asin(_ x: CGFloat) -> Angle {
     return Angle(CoreGraphics.asin(x), unit: .radians)
 }
-public func acos(_ x: CGFloat) -> Angle {
+func acos(_ x: CGFloat) -> Angle {
     return Angle(CoreGraphics.acos(x), unit: .radians)
 }
-public func atan(_ x: CGFloat) -> Angle {
+func atan(_ x: CGFloat) -> Angle {
     return Angle(CoreGraphics.atan(x), unit: .radians)
 }
-public func atan2(_ lhs: CGFloat, _ rhs: CGFloat) -> Angle {
+func atan2(_ lhs: CGFloat, _ rhs: CGFloat) -> Angle {
     return Angle(CoreGraphics.atan2(lhs, rhs), unit: .radians)
 }
 
 // MARK: Points
 
-public extension CGPoint {
+extension CGPoint {
 
     /// - returns: The `Angle` between horizontal line through `self`,
     /// and line from `self` to `reference.
-    public func polarAngle(reference: CGPoint) -> Angle {
+    func polarAngle(reference: CGPoint) -> Angle {
         return (self - reference).angle
     }
 
     /// - returns: The `Angle` between line from `self` to `previous`
     /// and `self` to `next`, i.e. the angle at vertex `self`
     /// of triangle (`previous`,`self`,`next`).
-    public func angle(previous: CGPoint, next: CGPoint) -> Angle {
+    func angle(previous: CGPoint, next: CGPoint) -> Angle {
         let v1 = previous - self
         let v2 = next - self
         return atan2(v1.dy, v1.dx) - atan2(v2.dy, v2.dx)
@@ -175,15 +175,15 @@ public extension CGPoint {
 
 // MARK: Transform
 
-public extension CGAffineTransform {
+extension CGAffineTransform {
 
     /// Convenience initializer for rotation transform.
-    public init(rotationAngle angle: Angle) {
+    init(rotationAngle angle: Angle) {
         self.init(rotationAngle: angle.asUnit(.radians))
     }
 
     /// Convenienc function for rotating a transform.
-    public func rotated(by angle: Angle) -> CGAffineTransform {
+    func rotated(by angle: Angle) -> CGAffineTransform {
         return rotated(by: angle.asUnit(.radians))
     }
 }
@@ -191,7 +191,7 @@ public extension CGAffineTransform {
 // MARK: CustomDebugStringConvertible
 
 extension Angle: CustomDebugStringConvertible {
-    public var debugDescription: String {
+    var debugDescription: String {
         switch unit {
         case .radians: return "Angle: \(value) rad. (\(degrees)°)"
         case .degrees: return "Angle: \(value)° (\(radians) rad.)"

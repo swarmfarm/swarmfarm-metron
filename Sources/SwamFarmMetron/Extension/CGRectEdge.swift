@@ -1,7 +1,7 @@
 import CoreGraphics
 
 extension CGRectEdge: Opposable {
-    public static var allOpposites: [(CGRectEdge, CGRectEdge)] {
+    static var allOpposites: [(CGRectEdge, CGRectEdge)] {
         return [(.minXEdge, .maxXEdge), (.minYEdge, .maxYEdge)]
     }
 }
@@ -10,7 +10,7 @@ extension CGRectEdge: EdgeType {
 
     public typealias CornerType = Corner
 
-    public var corners: (CornerType, CornerType) {
+    var corners: (CornerType, CornerType) {
         switch self {
         case .minXEdge: return (.minXminY, .minXmaxY)
         case .minYEdge: return (.minXminY, .maxXminY)
@@ -19,7 +19,7 @@ extension CGRectEdge: EdgeType {
         }
     }
 
-    public var axis: Axis {
+    var axis: Axis {
         switch self {
         case .minXEdge, .maxXEdge: return .xAxis
         case .minYEdge, .maxYEdge: return .yAxis

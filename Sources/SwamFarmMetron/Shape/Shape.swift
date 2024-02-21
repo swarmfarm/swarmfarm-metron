@@ -3,7 +3,7 @@ import CoreGraphics
 /**
  *  Represents any shape in two-dimensional space.
  */
-public protocol Shape {
+protocol Shape {
 
     var area: CGFloat { get }
     var perimeter: CGFloat { get }

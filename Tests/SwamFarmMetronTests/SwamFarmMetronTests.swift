@@ -1,5 +1,5 @@
 import XCTest
-@testable import SwamFarmMetron
+@testable import SwarmfarmMetron
 
 final class SwamFarmMetronTests: XCTestCase {
     func testExample() throws {

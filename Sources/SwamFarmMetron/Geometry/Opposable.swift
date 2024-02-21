@@ -2,7 +2,7 @@
  *  Opposable relates to anything that spatially
  *  has an opposite, such as corners and edges.
  */
-public protocol Opposable {
+protocol Opposable {
 
     /// An `Opposable` should return each unique pair
     /// of opposites, such as [(top, bottom), (right, left)].
@@ -22,13 +22,13 @@ public protocol Opposable {
     var opposite: Self { get }
 }
 
-public extension Opposable where Self: Equatable {
+extension Opposable where Self: Equatable {
 
-    public static var all: [Self] {
+    static var all: [Self] {
         return allOpposites.map { $0.0 } + allOpposites.map { $0.1 }
     }
 
-    public var opposite: Self {
+    var opposite: Self {
         let allOpposites = Self.allOpposites
         for (lhs, rhs) in allOpposites {
             if self == lhs {

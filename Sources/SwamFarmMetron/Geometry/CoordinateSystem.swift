@@ -8,7 +8,7 @@ import CoreGraphics
  *  The `CoordinateSystem` is used to translate from visual positions
  *  (top, right, bottom, left) to coordinate positions (minY, maxX, maxY, minX).
  */
-public struct CoordinateSystem {
+struct CoordinateSystem {
 
     #if os(macOS)
         public static let `default` = CoordinateSystem(origin: .bottomLeft)
@@ -16,14 +16,14 @@ public struct CoordinateSystem {
         public static let `default` = CoordinateSystem(origin: .topLeft)
     #endif
 
-    public var origin: CornerPosition
+    var origin: CornerPosition
 
-    public init(origin: CornerPosition) {
+    init(origin: CornerPosition) {
         self.origin = origin
     }
 }
 
-public extension CoordinateSystem {
+extension CoordinateSystem {
 
     // MARK: Corners
 
@@ -31,7 +31,7 @@ public extension CoordinateSystem {
      *  Returns the `Corners` matching the `CornerPositions` in this
      *  coordinate system, running clockwise starting at topLeft.
      */
-    public var corners: [Corner] {
+    var corners: [Corner] {
         return CornerPosition.all.map { corner(for: $0) }
     }
 
@@ -40,7 +40,7 @@ public extension CoordinateSystem {
      *  coordinate system, starting and in rotating order as
      *  provided.
      */
-    public func corners(startingAt start: Corner,
+    func corners(startingAt start: Corner,
                         rotating: RotationDirection = .clockwise) -> [Corner] {
         var arrangedCorners: [Corner] = corners
         arrangedCorners = rotating == .clockwise ? arrangedCorners : arrangedCorners.reversed()
@@ -51,7 +51,7 @@ public extension CoordinateSystem {
     }
 
     /// - returns: The `CornerPosition` of the `Corner` in this CoordinateSystem.
-    public func position(for corner: Corner) -> CornerPosition {
+    func position(for corner: Corner) -> CornerPosition {
         let tlsCorner: CornerPosition   //  topLeft system corner
         switch corner {
         case .minXminY: tlsCorner = .topLeft
@@ -68,7 +68,7 @@ public extension CoordinateSystem {
     }
 
     /// - returns: The `Corner` at the `CornerPosition` in this CoordinateSystem.
-    public func corner(for position: CornerPosition) -> Corner {
+    func corner(for position: CornerPosition) -> Corner {
         let tlsPosition: Corner   //  topLeft system position
         switch position {
         case .topLeft: tlsPosition = .minXminY
@@ -90,7 +90,7 @@ public extension CoordinateSystem {
      *  Returns the `CGRectEdges` matching the `Sides` in this
      *  coordinate system, running clockwise starting at top.
      */
-    public var edges: [CGRectEdge] {
+    var edges: [CGRectEdge] {
         return Side.all.map { edge(for: $0) }
     }
 
@@ -99,7 +99,7 @@ public extension CoordinateSystem {
      *  coordinate system, starting and in rotating order as
      *  provided.
      */
-    public func edges(startingAt start: CGRectEdge,
+    func edges(startingAt start: CGRectEdge,
                       rotating: RotationDirection = .clockwise) -> [CGRectEdge] {
         var arrangedEdges: [CGRectEdge] = edges
         arrangedEdges = rotating == .clockwise ? arrangedEdges : arrangedEdges.reversed()
@@ -110,7 +110,7 @@ public extension CoordinateSystem {
     }
 
     /// - returns: The `Side` of the `CGRectEdge` in this CoordinateSystem
-    public func side(for edge: CGRectEdge) -> Side {
+    func side(for edge: CGRectEdge) -> Side {
         let tlsSide: Side   //  topLeft system side
         switch edge {
         case .minXEdge: tlsSide = .left
@@ -127,7 +127,7 @@ public extension CoordinateSystem {
     }
 
     /// - returns: The `CGRectEdge` at the `Side` in this CoordinateSystem
-    public func edge(for side: Side) -> CGRectEdge {
+    func edge(for side: Side) -> CGRectEdge {
         let tlsEdge: CGRectEdge   //  topLeft system edge
         switch side {
         case .top: tlsEdge = .minYEdge
@@ -144,7 +144,7 @@ public extension CoordinateSystem {
     }
 
     /// - returns: True if a circle, traced by incrementing an angle, runs clockwise
-    public var circleRunsClockwise: Bool {
+    var circleRunsClockwise: Bool {
         switch origin {
         case .topLeft, .bottomRight: return true
         case .bottomLeft, .topRight: return false
@@ -155,7 +155,7 @@ public extension CoordinateSystem {
 // MARK: CustomDebugStringConvertible
 
 extension CoordinateSystem: CustomDebugStringConvertible {
-    public var debugDescription: String {
+    var debugDescription: String {
         return "CoordinateSystem {origin: \(origin)}"
     }
 }

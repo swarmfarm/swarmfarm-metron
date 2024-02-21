@@ -4,7 +4,7 @@ import CoreGraphics
  *  Represents any shape that can be defined as a `Polygon`,
  *  i.e. a number (> 2) of connected points.
  */
-public protocol PolygonType: Shape {
+protocol PolygonType: Shape {
     var edgeCount: Int { get }
     var points: [CGPoint] { get }
     var lineSegments: [LineSegment] { get }
@@ -31,7 +31,7 @@ struct Polygon: PolygonType {
     /// will be rearranged in such a way that certain
     /// calculations can be done more easily.
     /// The initializer asserts on being given at least 3 points.
-    public init(points: [CGPoint]) {
+    init(points: [CGPoint]) {
         assert(points.count > 2, "A polygon should at least have 3 points.")
 
         //  Store them in "clockwise" direction (sum of edges should be positive)
@@ -61,7 +61,7 @@ extension Polygon {
     /// until all lineSegments are connected.
     /// Then the default initializer is called, passing
     /// all points of the connected lineSegments.
-    public init?(lineSegments: [LineSegment]) {
+    init?(lineSegments: [LineSegment]) {
         var remainingLineSegments = lineSegments
         var points = [CGPoint]()
         if let firstSegment = remainingLineSegments.popLast() {
@@ -81,7 +81,7 @@ extension Polygon {
     }
 
     /// The individual line segments between consecutive points of this polygon.
-    public var lineSegments: [LineSegment] {
+    var lineSegments: [LineSegment] {
         var lineSegments = [LineSegment]()
         (0..<edgeCount).forEach { pointIndex in
             let point = points[pointIndex]
@@ -92,12 +92,12 @@ extension Polygon {
     }
 
     /// The number of edges of this polygon.
-    public var edgeCount: Int {
+    var edgeCount: Int {
         return points.count
     }
 
     /// - returns: True if line segments of this polygon intersect each other.
-    public var isSelfIntersecting: Bool {
+    var isSelfIntersecting: Bool {
         //  Might be implemented more efficiently
         var lineSegments = self.lineSegments
         while let segment = lineSegments.popLast() {
@@ -121,7 +121,7 @@ extension Polygon {
     }
 
     /// - returns: True if all interior angles are less than 180°.
-    public var isConvex: Bool {
+    var isConvex: Bool {
         for pointIndex in 0..<edgeCount {
             let a = points[pointIndex]
             let b = points[(pointIndex + 1) % edgeCount]
@@ -136,14 +136,14 @@ extension Polygon {
     }
 
     /// - returns: true if one or more interior angles is more than 180°.
-    public var isConcave: Bool {
+    var isConcave: Bool {
         return !isConvex
     }
 }
 
 extension Polygon: Drawable {
 
-    public var path: CGPath? {
+    var path: CGPath? {
         var pointsIterator = points.makeIterator()
         if let first = pointsIterator.next() {
             let path = CGMutablePath()
@@ -160,11 +160,11 @@ extension Polygon: Drawable {
 
 extension Polygon: Shape {
 
-    public var center: CGPoint {
+    var center: CGPoint {
         return boundingRect.center
     }
 
-    public var perimeter: CGFloat {
+    var perimeter: CGFloat {
         return lineSegments.reduce(CGFloat(0.0), { $0 + $1.length })
     }
 
@@ -172,7 +172,7 @@ extension Polygon: Shape {
      *  Note: area for a self-intersecting polygon is
      *  not supported, so this will return .nan .
      */
-    public var area: CGFloat {
+    var area: CGFloat {
         guard isSelfIntersecting == false else { return .nan }
         var numerator = CGFloat(0.0)
         (0..<edgeCount).forEach { pointIndex in
@@ -183,25 +183,25 @@ extension Polygon: Shape {
         return abs(numerator / 2.0)
     }
 
-    public var minX: CGFloat {
+    var minX: CGFloat {
         return points.reduce(CGFloat.greatestFiniteMagnitude, { current, point -> CGFloat in
             return min(current, point.x)
         })
     }
 
-    public var maxX: CGFloat {
+    var maxX: CGFloat {
         return points.reduce(-CGFloat.greatestFiniteMagnitude, { current, point -> CGFloat in
             return max(current, point.x)
         })
     }
 
-    public var minY: CGFloat {
+    var minY: CGFloat {
         return points.reduce(CGFloat.greatestFiniteMagnitude, { current, point -> CGFloat in
             return min(current, point.y)
         })
     }
 
-    public var maxY: CGFloat {
+    var maxY: CGFloat {
         return points.reduce(-CGFloat.greatestFiniteMagnitude, { current, point -> CGFloat in
             return max(current, point.y)
         })
@@ -217,14 +217,14 @@ extension Polygon: Shape {
         return minY + ((maxY - minY) / 2.0)
     }
 
-    public var width: CGFloat { return maxX - minX }
-    public var height: CGFloat { return maxY - minY }
+    var width: CGFloat { return maxX - minX }
+    var height: CGFloat { return maxY - minY }
 
-    public var boundingRect: CGRect {
+    var boundingRect: CGRect {
         return CGRect(minX: minX, minY: minY, maxX: maxX, maxY: maxY)
     }
 
-    public func contains(_ point: CGPoint) -> Bool {
+    func contains(_ point: CGPoint) -> Bool {
         guard boundingRect.contains(point) else { return false }
         //  Raycasting
         let lineThroughPoint = Line(angle: Angle(0.0), through: point)

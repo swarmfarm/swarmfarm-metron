@@ -7,7 +7,7 @@ public enum RotationDirection {
  *  in a rotating manner (clockwise or counter-clockwise),
  *  such as corners or edges.
  */
-public protocol Rotatable: Opposable {
+protocol Rotatable: Opposable {
 
     static func all(startingAt: Self, rotating: RotationDirection) -> [Self]
 
@@ -15,22 +15,22 @@ public protocol Rotatable: Opposable {
     func previous(rotating: RotationDirection) -> Self
 }
 
-public extension Rotatable where Self: Equatable {
+extension Rotatable where Self: Equatable {
 
     /// - returns: The next element rotated in the provided direction.
-    public func next(rotating: RotationDirection) -> Self {
+    func next(rotating: RotationDirection) -> Self {
         let allInDirection = (rotating == .clockwise) ? Self.all : Self.all.reversed()
         let nextIndex = (allInDirection.index(of: self)! + 1) % allInDirection.count
         return allInDirection[nextIndex]
     }
 
     /// - returns: The previous element rotated in the provided direction.
-    public func previous(rotating: RotationDirection) -> Self {
+    func previous(rotating: RotationDirection) -> Self {
         return next(rotating: rotating).opposite
     }
 
     /// - returns: All elements starting and in rotating order as provided.
-    public static func all(startingAt start: Self,
+    static func all(startingAt start: Self,
                            rotating: RotationDirection = .clockwise) -> [Self] {
         var arrangedAll: [Self] = Self.all
         arrangedAll = rotating == .clockwise ? arrangedAll : arrangedAll.reversed()
