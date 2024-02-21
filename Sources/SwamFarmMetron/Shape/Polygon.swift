@@ -13,7 +13,7 @@ public protocol PolygonType: Shape {
 
 extension PolygonType {
     /// - returns: A `Polygon` representing this type.
-    public var polygon: Polygon {
+    var polygon: Polygon {
         return Polygon(points: points)
     }
 }
@@ -22,7 +22,7 @@ extension PolygonType {
  *  A `Polygon` is a shape existing of at least three connected
  *  points (and thus of at least three sides).
  */
-public struct Polygon: PolygonType {
+struct Polygon: PolygonType {
 
     public let points: [CGPoint]
 
@@ -53,7 +53,7 @@ public struct Polygon: PolygonType {
     }
 }
 
-public extension Polygon {
+extension Polygon {
 
     /// Initializes a `Polygon` given a number of `LineSegments`.
     /// The first lineSegment is taken as starting point,
@@ -208,11 +208,11 @@ extension Polygon: Shape {
     }
 
     /// Midpoints:
-    public var midX: CGFloat {
+    var midX: CGFloat {
         let minX = self.minX
         return minX + ((maxX - minX) / 2.0)
     }
-    public var midY: CGFloat {
+    var midY: CGFloat {
         let minY = self.minY
         return minY + ((maxY - minY) / 2.0)
     }
@@ -243,7 +243,7 @@ extension Collection where Iterator.Element == CGPoint, Index == Int {
      *  the outer-most points of the collection
      *  like a rubber band.
      */
-    public var convexHull: Polygon? {
+    var convexHull: Polygon? {
         guard count > 2 else { return nil }
         // Graham scan:
         let startPoint = reduce(self[0]) { (minY, p) -> CGPoint in
